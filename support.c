@@ -84,6 +84,14 @@ void accept_request(void *new_connection)
     strcpy(filepath, path_to_root);
     strcat(filepath, relevant_file_path);
 
+    // read and throw all useless infromation
+    buff[0] = 'A';
+    buff[1] = '\0';
+    while ((command_len > 0) && (strcmp("\n", buff)))
+    {
+        command_len = get_line(client, buff, sizeof(buff));
+    }
+
     // For this project, not supported method with get 404
     if (!is_get_method(method))
     {
@@ -91,21 +99,12 @@ void accept_request(void *new_connection)
     }
     else if (has_invalid_component(filepath))
     {
-        printf("we are here");
-        //fflush(stdout);
-        //not_found(client);
+        not_found(client);
     }
     else
     {
-        //printf("we are also here");
-        //fflush(stdout);
-        // read and throw all useless infromation
-        buff[0] = 'A';
-        buff[1] = '\0';
-        while ((command_len > 0) && (strcmp("\n", buff)))
-        {
-            command_len = get_line(client, buff, sizeof(buff));
-        }
+        // printf("we are also here");
+        // fflush(stdout);
 
         // find the extension
         char *extension = strrchr(filepath, '.');
@@ -280,19 +279,18 @@ int has_invalid_component(char *file_path)
 {
     int file_path_len = strlen(file_path);
 
-
     if (file_path_len < 3)
     {
         return 0;
     }
 
-    //printf("There are %d chars in  %s\n",file_path_len, file_path);
-    //fflush(stdout);
+    // printf("There are %d chars in  %s\n",file_path_len, file_path);
+    // fflush(stdout);
 
     for (int i = 0; i < (file_path_len - 2); i++)
     {
-        //printf("The %d char is %c\n",i, file_path[i]);
-        //fflush(stdout);
+        // printf("The %d char is %c\n",i, file_path[i]);
+        // fflush(stdout);
         if (file_path[i] == '.' && file_path[i + 1] == '.' && file_path[i + 2] == '/')
         {
             return 1;
