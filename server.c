@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     free(newstring);
     */
 
-    printf(" %d %hd %s", portocol_num, port, path_to_root);
+    //printf(" %d %hd %s", portocol_num, port, path_to_root);
 
     int server_sock = -1;
     int client_sock = -1;
@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
         server_sock = set_up_4(&port);
     }
 
-    //printf("Our server is listening on %hd", port);
+    printf("Our server is listening on %hd", port);
+    fflush(stdout);
 
     while (1) {
         client_sock = accept(server_sock, (struct sockaddr *)&client_name, &client_name_len);

@@ -50,7 +50,43 @@ void accept_request(void *new_connection)
 
     command_len = get_line(client, buff, sizeof(buff));
 
-    printf("%s", buff);
+    int i = 0;
+
+    // get the method from the first line
+    char method[BUFF_SIZE_BIG];
+
+    while (!isspace(buff[i]) && (i < command_len))
+    {
+        method[i] = buff[i];
+        i++;
+    }
+    method[i] = '\0';
+
+    // jump over spaces
+    while (isspace(buff[i]) && (i < command_len))
+    {
+        i++;
+    }
+
+    // read the relevant file path
+    char relevant_file_path[BUFF_SIZE_BIG];
+    int j = 0;
+    while (!isspace(buff[i]) && (i < command_len)) {
+        relevant_file_path[j] = buff[i];
+        i++;
+        j++;
+    }
+    
+    relevant_file_path[j] = '\0';
+
+    
+    char filepath[BUFF_SIZE_BIG];
+    strcpy(filepath, path_to_root);
+    strcat(filepath, relevant_file_path);
+    
+    
+    printf("%s", filepath);
+    fflush(stdout);
 
     close(client);
 }
@@ -73,7 +109,7 @@ int get_line(int sockfd, char *buff, int size)
         {
             if (c == '\r')
             {
-                //take a look at the next char, if '\n', read it
+                // take a look at the next char, if '\n', read it
                 n = recv(sockfd, &c, 1, MSG_PEEK);
                 // DEBUG printf("%02X\n", c);
                 if ((n > 0) && (c == '\n'))
@@ -81,7 +117,7 @@ int get_line(int sockfd, char *buff, int size)
                     recv(sockfd, &c, 1, 0);
                 }
                 else
-                { 
+                {
                     // there is no char after it or is belonging to next line, jump out of the loop
                     c = '\n';
                 }
