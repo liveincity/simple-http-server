@@ -30,7 +30,7 @@ int set_up_4(unsigned short *port)
         exit(EXIT_FAILURE);
     }
 
-    if (listen(sockfd, 5) < 0)
+    if (listen(sockfd, 25) < 0)
     {
         perror("listen");
         exit(EXIT_FAILURE);
@@ -330,7 +330,7 @@ int set_up_6(unsigned short *port)
         exit(EXIT_FAILURE);
     }
 
-    if (listen(sockfd, 5) < 0)
+    if (listen(sockfd, 25) < 0)
     {
         perror("listen6");
         exit(EXIT_FAILURE);
