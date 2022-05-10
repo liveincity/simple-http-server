@@ -38,3 +38,63 @@ int set_up_4(unsigned short *port)
 
     return sockfd;
 }
+
+void accept_request(void *new_connection)
+{
+    CONNECTION_t *connection = (CONNECTION_t *)new_connection;
+    int client = connection->client;
+    char *path_to_root = connection->path_to_root;
+
+    char buff[BUFF_SIZE_BIG];
+    int command_len;
+
+    command_len = get_line(client, buff, sizeof(buff));
+
+    printf("%s", buff);
+
+    close(client);
+}
+
+/* read in a line of data, one char at a time, if the char is '\n', it should be the line
+ * if '\r' check id the next is '\n', if so, replace '/r/n' to '/n' , it become a line
+ * if not, stop reading and it become a line
+ */
+int get_line(int sockfd, char *buff, int size)
+{
+    int i = 0;
+    char c = '\0';
+    int n;
+
+    while ((i < size - 1) && (c != '\n'))
+    {
+        n = recv(sockfd, &c, 1, 0);
+        // DEBUG printf("%02X\n", c);
+        if (n > 0)
+        {
+            if (c == '\r')
+            {
+                //take a look at the next char, if '\n', read it
+                n = recv(sockfd, &c, 1, MSG_PEEK);
+                // DEBUG printf("%02X\n", c);
+                if ((n > 0) && (c == '\n'))
+                {
+                    recv(sockfd, &c, 1, 0);
+                }
+                else
+                { 
+                    // there is no char after it or is belonging to next line, jump out of the loop
+                    c = '\n';
+                }
+            }
+            buff[i] = c;
+            i++;
+        }
+        else
+        {
+            c = '\n';
+        }
+    }
+    buff[i] = '\0';
+
+    return (i);
+}

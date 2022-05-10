@@ -28,10 +28,10 @@ int main(int argc, char *argv[])
     printf(" %d %hd %s", portocol_num, port, path_to_root);
 
     int server_sock = -1;
-    //int client_sock = -1;
-    // struct sockaddr_in client_name;
+    int client_sock = -1;
+    struct sockaddr_in client_name;
 
-    // socklen_t client_name_len = sizeof(client_name);
+    socklen_t client_name_len = sizeof(client_name);
     // pthread_t newthread;
 
     if (portocol_num == 4)
@@ -39,7 +39,23 @@ int main(int argc, char *argv[])
         server_sock = set_up_4(&port);
     }
 
-    printf("Our server is listening on %hd", port);
+    //printf("Our server is listening on %hd", port);
+
+    while (1) {
+        client_sock = accept(server_sock, (struct sockaddr *)&client_name, &client_name_len);
+
+        if (client_sock == -1) {
+            perror("accept");
+            exit(EXIT_FAILURE);
+        }
+
+        CONNECTION_t new_connection;
+        new_connection.client = client_sock;
+        new_connection.path_to_root = path_to_root;
+
+        accept_request((void *)&new_connection);
+
+    }
 
     close(server_sock);
 }
