@@ -215,9 +215,9 @@ void serve_file(int client, FILE *file_pointer, char *extension)
         send(client, buff, strlen(buff), 0);
     }
 
-    printf("%d", strcasecmp(extension, ".jpg"));
-    printf("%s", extension);
-    fflush(stdout);
+    //printf("hello");
+    //printf("%s", extension);
+    //fflush(stdout);
 
     sprintf(buff, "\r\n");
     send(client, buff, strlen(buff), 0);
