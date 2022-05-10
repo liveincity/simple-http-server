@@ -71,22 +71,53 @@ void accept_request(void *new_connection)
     // read the relevant file path
     char relevant_file_path[BUFF_SIZE_BIG];
     int j = 0;
-    while (!isspace(buff[i]) && (i < command_len)) {
+    while (!isspace(buff[i]) && (i < command_len))
+    {
         relevant_file_path[j] = buff[i];
         i++;
         j++;
     }
-    
+
     relevant_file_path[j] = '\0';
 
-    
     char filepath[BUFF_SIZE_BIG];
     strcpy(filepath, path_to_root);
     strcat(filepath, relevant_file_path);
-    
-    
-    printf("%s", filepath);
-    fflush(stdout);
+
+    // For this project, not supported method with get 404
+    if (!is_get_method(method))
+    {
+        not_found(client);
+    }
+    else
+    {
+        // read and throw all useless infromation
+        buff[0] = 'A';
+        buff[1] = '\0';
+        while ((command_len > 0) && (strcmp("\n", buff)))
+        {
+            command_len = get_line(client, buff, sizeof(buff));
+        }
+
+        // find the extension
+        char *extension = strrchr(filepath, '.');
+
+        FILE *file_pointer = NULL;
+        file_pointer = fopen(filepath, "r");
+
+        if (file_pointer == NULL)
+        {
+            not_found(client);
+        }
+        else
+        {
+            serve_file(client, file_pointer, extension);
+            fclose(file_pointer);
+        }
+
+        // printf("%s", filepath);
+        // fflush(stdout);
+    }
 
     close(client);
 }
@@ -133,4 +164,106 @@ int get_line(int sockfd, char *buff, int size)
     buff[i] = '\0';
 
     return (i);
+}
+
+/* this function is used to reply a 404 to the client
+ */
+void not_found(int client)
+{
+    char buff[BUFF_SIZE_BIG];
+    sprintf(buff, "HTTP/1.0 404 NOT FOUND\r\n");
+    send(client, buff, strlen(buff), 0);
+    sprintf(buff, "\r\n");
+    send(client, buff, strlen(buff), 0);
+}
+
+void serve_file(int client, FILE *file_pointer, char *extension)
+{
+    char buff[BUFF_SIZE_BIG];
+    sprintf(buff, "HTTP/1.0 200 OK\r\n");
+    send(client, buff, strlen(buff), 0);
+
+    // sent differnt content-type depend on the extension
+    if (extension == NULL)
+    {
+        sprintf(buff, "Content-Type: application/octet-stream\r\n");
+        send(client, buff, strlen(buff), 0);
+    }
+    else if (is_same_str(extension, ".html"))
+    {
+        sprintf(buff, "Content-Type: text/html\r\n");
+        send(client, buff, strlen(buff), 0);
+    }
+    else if (is_same_str(extension, ".jpg"))
+    {
+        sprintf(buff, "Content-Type: image/jpeg\r\n");
+        send(client, buff, strlen(buff), 0);
+    }
+    else if (is_same_str(extension, ".css"))
+    {
+        sprintf(buff, "Content-Type: text/css\r\n");
+        send(client, buff, strlen(buff), 0);
+    }
+    else if (is_same_str(extension, ".js"))
+    {
+        sprintf(buff, "Content-Type: text/javascript\r\n");
+        send(client, buff, strlen(buff), 0);
+    }
+    else
+    {
+        sprintf(buff, "Content-Type: application/octet-stream\r\n");
+        send(client, buff, strlen(buff), 0);
+    }
+
+    printf("%d", strcasecmp(extension, ".jpg"));
+    printf("%s", extension);
+    fflush(stdout);
+
+    sprintf(buff, "\r\n");
+    send(client, buff, strlen(buff), 0);
+
+    // send the file
+    int n_count;
+    while ((n_count = fread(buff, sizeof(char), BUFF_SIZE_BIG, file_pointer))>0)
+    {
+        send(client, buff, n_count, 0);
+    }
+}
+
+// this funtion would check if the string is "GET"
+int is_get_method(char *method)
+{
+    int method_len = strlen(method);
+    if (method_len < 3)
+    {
+        return 0;
+    }
+
+    if (method[0] == 'G' && method[1] == 'E' && method[2] == 'T')
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+int is_same_str(char *extension, char *stand_extension)
+{
+    int extension_len = strlen(extension);
+    int stand_extension_len = strlen(stand_extension);
+
+    if (extension_len != stand_extension_len)
+    {
+        return 0;
+    }
+
+    for (int i = 0; i < stand_extension_len; i++)
+    {
+        if (extension[i] != stand_extension[i])
+        {
+            return 0;
+        }
+    }
+
+    return 1;
 }

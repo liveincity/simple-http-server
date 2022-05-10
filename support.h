@@ -24,3 +24,7 @@ typedef struct {
 int set_up_4(unsigned short *port);
 void accept_request(void *new_connection);
 int get_line(int sockfd, char *buff, int size);
+void not_found(int client);
+void serve_file(int client, FILE *file_pointer, char *extension);
+int is_get_method(char *method);
+int is_same_str(char *extension, char *stand_extension);
