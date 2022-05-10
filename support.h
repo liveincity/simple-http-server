@@ -28,3 +28,4 @@ void not_found(int client);
 void serve_file(int client, FILE *file_pointer, char *extension);
 int is_get_method(char *method);
 int is_same_str(char *extension, char *stand_extension);
+int has_invalid_component (char *file_path);
