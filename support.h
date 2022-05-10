@@ -3,6 +3,7 @@
 #define BUFF_SIZE_BIG 2048
 
 #define IMPLEMENTS_IPV6
+#define MULTITHREADED
 
 #include <stdio.h>
 #include <sys/socket.h>
@@ -15,7 +16,7 @@
 #include <ctype.h>
 #include <strings.h>
 #include <string.h>
-//#include <pthread.h>
+#include <pthread.h>
 #include <stdlib.h>
 
 typedef struct {
