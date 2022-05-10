@@ -37,6 +37,11 @@ int main(int argc, char *argv[])
     if (portocol_num == 4)
     {
         server_sock = set_up_4(&port);
+    } else if (portocol_num == 6) {
+        server_sock = set_up_6(&port);
+    } else {
+        perror("What the hell IP ver are you using?");
+        exit(EXIT_FAILURE);
     }
 
     //printf("Our server is listening on %hd", port);

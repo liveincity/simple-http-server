@@ -299,3 +299,42 @@ int has_invalid_component(char *file_path)
 
     return 0;
 }
+
+int set_up_6(unsigned short *port)
+{
+    int sockfd = 0;
+    struct sockaddr_in6 name;
+
+    sockfd = socket(PF_INET6, SOCK_STREAM, 0);
+    if (sockfd == -1)
+    {
+        perror("socket6");
+        exit(EXIT_FAILURE);
+    }
+
+    memset(&name, 0, sizeof(name));
+    name.sin6_family = AF_INET6;
+    name.sin6_port = htons(*port);
+    name.sin6_addr = in6addr_any;
+
+    int enable = 1;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+    {
+        perror("setsockopt6");
+        exit(1);
+    }
+
+    if (bind(sockfd, (struct sockaddr *)&name, sizeof(name)) < 0)
+    {
+        perror("bind6");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(sockfd, 5) < 0)
+    {
+        perror("listen6");
+        exit(EXIT_FAILURE);
+    }
+
+    return sockfd;
+}
