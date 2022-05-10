@@ -12,3 +12,5 @@
 #include <string.h>
 //#include <pthread.h>
 #include <stdlib.h>
+
+int set_up_4(unsigned short *port);
