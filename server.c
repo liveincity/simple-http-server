@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
     struct sockaddr_in client_name;
 
     socklen_t client_name_len = sizeof(client_name);
-    pthread_t newthread;
 
     if (portocol_num == 4)
     {
@@ -59,6 +58,8 @@ int main(int argc, char *argv[])
         new_connection.client = client_sock;
         new_connection.path_to_root = path_to_root;
 
+        pthread_t newthread;
+        
         //accept_request((void *)&new_connection);
         if (pthread_create(&newthread, NULL, (void *)accept_request, (void *)&new_connection) != 0) {
             perror("pthread_creat");
