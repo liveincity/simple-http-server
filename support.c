@@ -44,6 +44,7 @@ void accept_request(void *new_connection)
     CONNECTION_t *connection = (CONNECTION_t *)new_connection;
     int client = connection->client;
     char *path_to_root = connection->path_to_root;
+    pthread_mutex_unlock(&mutex);
 
     char buff[BUFF_SIZE_BIG];
     int command_len;

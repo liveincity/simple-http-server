@@ -19,6 +19,8 @@
 #include <pthread.h>
 #include <stdlib.h>
 
+pthread_mutex_t mutex;
+
 typedef struct {
     char *path_to_root;
     int client;
