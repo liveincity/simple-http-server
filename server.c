@@ -5,6 +5,7 @@ int main(int argc, char *argv[])
     int portocol_num;
     unsigned short port;
     char *path_to_root;
+    char *port_str;
 
     if (argc != 4)
     {
@@ -15,17 +16,8 @@ int main(int argc, char *argv[])
     // store parameters
     sscanf(argv[1], "%d", &portocol_num);
     sscanf(argv[2], "%hd", &port);
+    port_str = argv[2];
     path_to_root = argv[3];
-
-    /*
-    char *teststring = "apple";
-    char *newstring = (char *)malloc(strlen(teststring) + strlen(path_to_root));
-    strcpy(newstring, path_to_root);
-    strcat(newstring, teststring);
-    free(newstring);
-    */
-
-    // printf(" %d %hd %s", portocol_num, port, path_to_root);
 
     int server_sock = -1;
     int client_sock = -1;
@@ -33,6 +25,11 @@ int main(int argc, char *argv[])
 
     socklen_t client_name_len = sizeof(client_name);
 
+    if (!isdigit(port_str[0])) {
+        perror("We need a digital port!");
+        exit(EXIT_FAILURE);
+    }
+    
     if (portocol_num == 4)
     {
         server_sock = set_up_4(&port);
@@ -53,8 +50,8 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    // printf("Our server is listening on %hd", port);
-    // fflush(stdout);
+    //printf("Our server is listening on %hd", port);
+    //fflush(stdout);
 
     while (1)
     {
