@@ -55,6 +55,13 @@ int main(int argc, char *argv[])
 
     while (1)
     {
+        // disable SIGPIPE
+        struct sigaction sa;
+        sa.sa_handler = handle_pipe;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;
+        sigaction(SIGPIPE,&sa,NULL);
+        
         client_sock = accept(server_sock, (struct sockaddr *)&client_name, &client_name_len);
 
         if (client_sock == -1)

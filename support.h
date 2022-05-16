@@ -18,6 +18,7 @@
 #include <string.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <signal.h>
 
 pthread_mutex_t mutex;
 
@@ -35,3 +36,4 @@ int is_get_method(char *method);
 int is_same_str(char *extension, char *stand_extension);
 int has_invalid_component (char *file_path);
 int set_up_6(unsigned short *port);
+void handle_pipe(int sig);

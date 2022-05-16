@@ -339,3 +339,9 @@ int set_up_6(unsigned short *port)
 
     return sockfd;
 }
+
+// Disable SIGPIPE
+void handle_pipe(int sig)
+{
+    // do nothing
+}
