@@ -74,6 +74,8 @@ int main(int argc, char *argv[])
         // fflush(stdout);
 
         // accept_request((void *)&new_connection);
+        
+        // creat a new thread to handle the connection
         if (pthread_create(&newthread, NULL, (void *)accept_request, (void *)&new_connection) != 0)
         {
             perror("pthread_creat");
