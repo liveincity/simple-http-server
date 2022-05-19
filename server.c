@@ -50,8 +50,6 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    //printf("Our server is listening on %hd", port);
-    //fflush(stdout);
 
     while (1)
     {
@@ -76,9 +74,6 @@ int main(int argc, char *argv[])
         new_connection.path_to_root = path_to_root;
 
         pthread_t newthread;
-
-        // printf("%d\n", new_connection.client);
-        // fflush(stdout);
 
         // accept_request((void *)&new_connection);
         

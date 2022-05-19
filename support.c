@@ -1,5 +1,6 @@
 #include "support.h"
 
+// This function is used to set up a IPv4 socket
 int set_up_4(unsigned short *port)
 {
     int sockfd = 0;
@@ -39,6 +40,8 @@ int set_up_4(unsigned short *port)
     return sockfd;
 }
 
+/*
+ */
 void accept_request(void *new_connection)
 {
     CONNECTION_t *connection = (CONNECTION_t *)new_connection;
@@ -53,7 +56,7 @@ void accept_request(void *new_connection)
 
     int i = 0;
 
-    // get the method from the first line
+    // get the method part from the first line
     char method[BUFF_SIZE_BIG];
 
     while (!isspace(buff[i]) && (i < command_len))
@@ -142,15 +145,14 @@ int get_line(int sockfd, char *buff, int size)
 
     while ((i < size - 1) && (c != '\n'))
     {
+        // read from the client one char at a time
         n = recv(sockfd, &c, 1, 0);
-        // DEBUG printf("%02X\n", c);
         if (n > 0)
         {
             if (c == '\r')
             {
                 // take a look at the next char, if '\n', read it
                 n = recv(sockfd, &c, 1, MSG_PEEK);
-                // DEBUG printf("%02X\n", c);
                 if ((n > 0) && (c == '\n'))
                 {
                     recv(sockfd, &c, 1, 0);
@@ -185,6 +187,7 @@ void not_found(int client)
     send(client, buff, strlen(buff), 0);
 }
 
+// This function is used to send the correct file type and file content to client
 void serve_file(int client, FILE *file_pointer, char *extension)
 {
     char buff[BUFF_SIZE_BIG];
@@ -223,10 +226,6 @@ void serve_file(int client, FILE *file_pointer, char *extension)
         send(client, buff, strlen(buff), 0);
     }
 
-    // printf("hello");
-    // printf("%s", extension);
-    // fflush(stdout);
-
     sprintf(buff, "\r\n");
     send(client, buff, strlen(buff), 0);
 
@@ -255,6 +254,9 @@ int is_get_method(char *method)
     return 0;
 }
 
+/* This function is used to check if two strings are the same
+ * In this porject, it would be used to check the extension of the file
+ */ 
 int is_same_str(char *extension, char *stand_extension)
 {
     int extension_len = strlen(extension);
@@ -276,6 +278,7 @@ int is_same_str(char *extension, char *stand_extension)
     return 1;
 }
 
+// This function is used to check if the relevent path contains any
 int has_invalid_component(char *file_path)
 {
     int file_path_len = strlen(file_path);
@@ -285,13 +288,8 @@ int has_invalid_component(char *file_path)
         return 0;
     }
 
-    // printf("There are %d chars in  %s\n",file_path_len, file_path);
-    // fflush(stdout);
-
     for (int i = 0; i < (file_path_len - 2); i++)
     {
-        // printf("The %d char is %c\n",i, file_path[i]);
-        // fflush(stdout);
         if (file_path[i] == '.' && file_path[i + 1] == '.' && file_path[i + 2] == '/')
         {
             return 1;
@@ -301,6 +299,7 @@ int has_invalid_component(char *file_path)
     return 0;
 }
 
+// This function is used to set up a IPv6 socket
 int set_up_6(unsigned short *port)
 {
     int sockfd = 0;
