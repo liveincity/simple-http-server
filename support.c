@@ -40,7 +40,9 @@ int set_up_4(unsigned short *port)
     return sockfd;
 }
 
-/*
+/* This function could handel the request sending from the clinic
+ * it needs the fd of the connection and the string of the path to the webroot
+ * they are wrapped as a void pointer
  */
 void accept_request(void *new_connection)
 {
@@ -105,9 +107,6 @@ void accept_request(void *new_connection)
     }
     else
     {
-        // printf("we are also here");
-        // fflush(stdout);
-
         // find the extension
         char *extension = strrchr(filepath, '.');
 
@@ -123,9 +122,6 @@ void accept_request(void *new_connection)
             serve_file(client, file_pointer, extension);
             fclose(file_pointer);
         }
-
-        // printf("%s", filepath);
-        // fflush(stdout);
     }
 
     close(client);
@@ -254,7 +250,7 @@ int is_get_method(char *method)
 
 /* This function is used to check if two strings are the same
  * In this porject, it would be used to check the extension of the file
- */ 
+ */
 int is_same_str(char *extension, char *stand_extension)
 {
     int extension_len = strlen(extension);

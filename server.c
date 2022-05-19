@@ -1,3 +1,9 @@
+/* This server is a porject of a Unimleb student Tianchen FAN
+ * The main structure of the server is influenced by Tinyhttp
+ * source url: https://github.com/AngryHacker/code-with-comments/tree/master/tinyhttpd
+ * Of course, I have to rewrite almost everything to add features required for the project
+ * and support new technique like IPv6
+ */
 #include "support.h"
 
 int main(int argc, char *argv[])
