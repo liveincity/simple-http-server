@@ -89,8 +89,6 @@ void accept_request(void *new_connection)
     strcat(filepath, relevant_file_path);
 
     // read and throw all useless infromation
-    buff[0] = 'A';
-    buff[1] = '\0';
     while ((command_len > 0) && (strcmp("\n", buff)))
     {
         command_len = get_line(client, buff, sizeof(buff));
