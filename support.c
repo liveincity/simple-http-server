@@ -147,7 +147,7 @@ int get_line(int sockfd, char *buff, int size)
             {
                 // take a look at the next char, if '\n', read it
                 n = recv(sockfd, &c, 1, MSG_PEEK);
-                if ((n > 0) && (c == '\n'))
+                if (c == '\n')
                 {
                     recv(sockfd, &c, 1, 0);
                 }
